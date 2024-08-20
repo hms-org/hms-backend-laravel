@@ -1,12 +1,11 @@
-# Pilih base image PHP dengan Apache
-FROM php:8.1-apache
+FROM php:8.2-apache
 
-# Install dependencies
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
     libzip-dev \
-    && docker-php-ext-install zip pdo_mysql
+    libxml2-dev \
+    && docker-php-ext-install zip pdo_mysql dom xml
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -32,5 +31,5 @@ EXPOSE 80
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Jalankan Apache
+# Run Apache
 CMD ["apache2-foreground"]
