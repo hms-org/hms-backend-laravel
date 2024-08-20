@@ -10,6 +10,7 @@ pipeline {
         stage('Prepare') {
             steps {
                 script {
+                    env.BRANCH_NAME = sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
                     if (env.BRANCH_NAME == 'dev') {
                         DOCKER_IMAGE_NAME = "hms-backend-laravel-dev"
                         DEPLOY_PORT = "8001"
