@@ -1,5 +1,10 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'php:8.2-apache' // Pastikan ini sesuai dengan image yang digunakan
+            args '-v /var/run/docker.sock:/var/run/docker.sock' // Memberi akses ke Docker daemon
+        }
+    }
     
     environment {
         DOCKER_IMAGE_NAME = ""
@@ -39,7 +44,7 @@ pipeline {
         
         stage('Install dependencies') {
             steps {
-                sh 'composer install'
+                sh 'composer install --ignore-platform-req=ext-dom --ignore-platform-req=ext-xml' // Jika masih ada masalah dependencies
                 sh 'cp .env.example .env'
                 sh 'php artisan key:generate'
             }
