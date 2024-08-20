@@ -24,6 +24,8 @@ EXPOSE 80
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+RUN chown -R www-data:www-data /var/www/html
+RUN chmod -R 755 /var/www/html
 
 # Run Apache
 CMD ["apache2-foreground"]
