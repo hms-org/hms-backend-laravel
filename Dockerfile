@@ -17,9 +17,7 @@ WORKDIR /var/www/html
 COPY . .
 
 # Install PHP dependencies
-RUN composer install 
-
-RUN composer update
+RUN composer install
 
 # Expose port 80
 EXPOSE 80
