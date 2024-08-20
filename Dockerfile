@@ -1,31 +1,17 @@
-FROM php:8.2-apache
+# Use PHP 8.2 image with FPM
+FROM php:8.2-fpm
 
-RUN apt-get update && apt-get install -y \
-    git \
-    unzip \
-    libzip-dev \
-    libxml2-dev \
-    && docker-php-ext-install zip pdo_mysql dom xml
+# Install Nginx
+RUN apt-get update && apt-get install -y nginx
 
-# Install Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+# Copy your Nginx configuration
+COPY nginx.conf /etc/nginx/nginx.conf
 
-# Set work directory
-WORKDIR /var/www/html
+# Copy your web files
+COPY . /var/www/html
 
-# Copy project files ke dalam container
-COPY . .
-
-# Install PHP dependencies
-RUN composer install
-
-# Expose port 80
+# Expose ports
 EXPOSE 80
 
-# Set permissions
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
-RUN chown -R www-data:www-data /var/www/html
-RUN chmod -R 755 /var/www/html
-
-# Run Apache
-CMD ["apache2-foreground"]
+# Start Nginx and PHP-FPM
+CMD ["sh", "-c", "service nginx start && php-fpm"]
