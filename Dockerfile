@@ -17,13 +17,9 @@ WORKDIR /var/www/html
 COPY . .
 
 # Install PHP dependencies
-RUN composer install --no-dev --optimize-autoloader
+RUN composer install 
 
-# Copy file konfigurasi Apache
-COPY .docker/vhost.conf /etc/apache2/sites-available/000-default.conf
-
-# Enable Apache Rewrite Module
-RUN a2enmod rewrite
+RUN composer update
 
 # Expose port 80
 EXPOSE 80
