@@ -10,6 +10,18 @@ COPY nginx.conf /etc/nginx/nginx.conf
 # Copy your web files
 COPY . /var/www/html
 
+# Set working directory
+WORKDIR /var/www/html
+
+# Install Composer
+RUN curl -sS https://getcomposer.org/installer | php
+RUN mv composer.phar /usr/local/bin/composer
+
+# Install Laravel dependencies
+RUN composer install
+
+RUN php artisan key:generate
+
 # Expose ports
 EXPOSE 80
 
