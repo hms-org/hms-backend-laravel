@@ -1,11 +1,6 @@
 pipeline {
-    agent {
-        docker {
-            image 'php:8.2-apache' // Pastikan ini sesuai dengan image yang digunakan
-            args '-v /var/run/docker.sock:/var/run/docker.sock' // Memberi akses ke Docker daemon
-        }
-    }
-    
+    agent any  // Use any available agent
+
     environment {
         DOCKER_IMAGE_NAME = ""
         DEPLOY_PORT = ""
@@ -41,39 +36,43 @@ pipeline {
                 git branch: "${env.BRANCH_NAME}", url: 'https://github.com/hms-org/hms-backend-laravel.git'
             }
         }
-        
-        stage('Install dependencies') {
-            steps {
-                sh 'composer install --ignore-platform-req=ext-dom --ignore-platform-req=ext-xml' // Jika masih ada masalah dependencies
-                sh 'cp .env.example .env'
-                sh 'php artisan key:generate'
-            }
-        }
 
         stage('Build Docker Image') {
             steps {
-                // Build Docker image based on branch
                 script {
                     docker.build("${DOCKER_IMAGE_NAME}:${env.BUILD_ID}")
                 }
             }
         }
 
+        stage('Install dependencies') {
+            steps {
+                script {
+                    docker.image("${DOCKER_IMAGE_NAME}:${env.BUILD_ID}").inside {
+                        sh 'composer install'
+                        sh 'cp .env.example .env'
+                        sh 'php artisan key:generate'
+                    }
+                }
+            }
+        }
+
         stage('Run Tests') {
             steps {
-                // Run Laravel tests
-                sh 'php artisan test'
+                script {
+                    docker.image("${DOCKER_IMAGE_NAME}:${env.BUILD_ID}").inside {
+                        sh 'php artisan test'
+                    }
+                }
             }
         }
 
         stage('Deploy to Server') {
             steps {
-                // Stop the old container
                 script {
                     sh "docker stop ${DOCKER_IMAGE_NAME} || true"
                     sh "docker rm ${DOCKER_IMAGE_NAME} || true"
-                    
-                    // Run the new container
+
                     sh """
                     docker run -d --name ${DOCKER_IMAGE_NAME} \
                     -p ${DEPLOY_PORT}:80 \
