@@ -1,5 +1,5 @@
 pipeline {
-    agent any  // Use any available agent
+    agent any
 
     environment {
         DOCKER_IMAGE_NAME = ""
