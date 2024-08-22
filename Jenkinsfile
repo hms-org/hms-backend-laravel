@@ -50,8 +50,6 @@ pipeline {
                 script {
                     docker.image("${DOCKER_IMAGE_NAME}:${env.BUILD_ID}").inside {
                         sh 'ls -la'
-                        sh 'echo ==========='
-                        sh 'ls src'
                         sh 'php artisan test'
                     }
                 }

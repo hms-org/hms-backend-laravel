@@ -22,6 +22,8 @@ COPY src/.env.example /var/www/html/.env
 # Set working directory
 WORKDIR /var/www/html
 
+RUN ls -la /var/www/html
+
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php
 RUN mv composer.phar /usr/local/bin/composer
