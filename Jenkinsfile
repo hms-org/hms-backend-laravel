@@ -65,7 +65,7 @@ pipeline {
             steps {
                 script {
                     // Example: Send an HTTP request to verify the app is running
-                    sh "curl -f http://localhost:${env.DEPLOY_PORT} || (echo 'Deployment failed!' && exit 1)"
+                    sh "curl -f http://localhost:8001 || (echo 'Deployment failed!' && exit 1)"
                 }
             }
         }
