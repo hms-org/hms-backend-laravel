@@ -11,6 +11,8 @@ RUN apt-get update && apt-get install -y \
 # Install the PHP zip extension
 RUN docker-php-ext-install zip
 
+RUN rm /etc/nginx/sites-available/default
+
 RUN mkdir -p /var/log/php-fpm
 
 # Copy your deployment configurations
