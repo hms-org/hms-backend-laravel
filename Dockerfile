@@ -16,7 +16,7 @@ RUN rm /etc/nginx/sites-available/default
 RUN mkdir -p /var/log/php-fpm
 
 # Copy your deployment configurations
-COPY deployment/nginx.conf /etc/nginx/nginx.conf
+COPY deployment/nginx.conf /etc/nginx/sites-enabled/default
 COPY deployment/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Copy your web files
