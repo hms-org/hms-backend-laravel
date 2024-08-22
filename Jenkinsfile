@@ -52,22 +52,21 @@ pipeline {
                     sh "docker stop ${DOCKER_IMAGE_NAME} || true"
                     sh "docker rm ${DOCKER_IMAGE_NAME} || true"
 
-                    sh """
-                    docker run -d --name ${DOCKER_IMAGE_NAME} \
-                    -p ${DEPLOY_PORT}:80 \
-                    ${DOCKER_IMAGE_NAME}:${env.BUILD_ID}
-                    """
+                    sh '''
+                    docker-compose -f docker-compose.prod.yml down
+                    docker-compose -f docker-compose.prod.yml up -d
+                    '''
                 }
             }
         }
-
-        stage('Verify Deployment') {
-            steps {
-                script {
-                    // Example: Send an HTTP request to verify the app is running
-                    sh "curl -f http://localhost:8001 || (echo 'Deployment failed!' && exit 1)"
-                }
-            }
+    }
+    
+    post {
+        success {
+            echo 'Build dan deploy berhasil!'
+        }
+        failure {
+            echo 'Build atau deploy gagal.'
         }
     }
 }

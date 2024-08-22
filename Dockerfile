@@ -1,47 +1,34 @@
-# Use PHP 8.2 image with FPM
-FROM php:8.2-fpm
+FROM php:8.3-fpm
 
-# Install necessary dependencies, including Nginx, Supervisor, zip extension, and unzip
+# Arguments defined in docker-compose.yml
+ARG user
+ARG uid
+
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
-    nginx \
-    supervisor \
-    libzip-dev \
+    git \
+    curl \
+    libpng-dev \
+    libonig-dev \
+    libxml2-dev \
+    zip \
     unzip
 
-# Install the PHP zip extension
-RUN docker-php-ext-install zip
+# Clear cache
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN rm /etc/nginx/sites-available/default
+# Install PHP extensions
+RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
 
-RUN mkdir -p /var/log/php-fpm
+# Get latest Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Copy your deployment configurations
-COPY deployment/nginx.conf /etc/nginx/sites-enabled/default
-COPY deployment/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-
-# Copy your web files
-COPY src /var/www/html
-COPY src/.env.example /var/www/html/.env
+# Create system user to run Composer and Artisan Commands
+RUN useradd -G www-data,root -u $uid -d /home/$user $user
+RUN mkdir -p /home/$user/.composer && \
+    chown -R $user:$user /home/$user
 
 # Set working directory
-WORKDIR /var/www/html
+WORKDIR /var/www
 
-RUN ls -la /var/www/html
-
-# Install Composer
-RUN curl -sS https://getcomposer.org/installer | php
-RUN mv composer.phar /usr/local/bin/composer
-
-# Install Laravel dependencies
-RUN composer install
-
-RUN php artisan key:generate
-
-# Ensure correct permissions
-# RUN chown -R www-data:www-data /var/www/html
-
-# Expose ports
-EXPOSE 80
-
-# Start Supervisor, which will start both Nginx and PHP-FPM
-CMD ["/usr/bin/supervisord"]
+USER $user
