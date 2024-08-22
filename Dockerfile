@@ -16,7 +16,7 @@ COPY deployment/nginx.conf /etc/nginx/nginx.conf
 COPY deployment/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Copy your web files
-COPY src/* /var/www/html
+COPY src /var/www/html
 COPY src/.env.example /var/www/html/.env
 
 # Set working directory
