@@ -1,8 +1,15 @@
 # Use PHP 8.2 image with FPM
 FROM php:8.2-fpm
 
-# Install Nginx and Supervisor
-RUN apt-get update && apt-get install -y nginx supervisor
+# Install necessary dependencies, including Nginx, Supervisor, zip extension, and unzip
+RUN apt-get update && apt-get install -y \
+    nginx \
+    supervisor \
+    libzip-dev \
+    unzip
+
+# Install the PHP zip extension
+RUN docker-php-ext-install zip
 
 # Copy your deployment configurations
 COPY deployment/nginx.conf /etc/nginx/nginx.conf
