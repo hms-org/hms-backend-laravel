@@ -1,11 +1,14 @@
 # Use PHP 8.2 image with FPM
 FROM php:8.2-fpm
 
-# Install Nginx
-RUN apt-get update && apt-get install -y nginx
+# Install Nginx and Supervisor
+RUN apt-get update && apt-get install -y nginx supervisor
 
 # Copy your Nginx configuration
 COPY nginx.conf /etc/nginx/nginx.conf
+
+# Copy your Supervisor configuration
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Copy your web files
 COPY . /var/www/html
@@ -25,5 +28,5 @@ RUN php artisan key:generate
 # Expose ports
 EXPOSE 80
 
-# Start Nginx and PHP-FPM
-CMD ["sh", "-c", "service nginx start && php-fpm"]
+# Start Supervisor, which will start both Nginx and PHP-FPM
+CMD ["/usr/bin/supervisord"]
