@@ -49,6 +49,7 @@ pipeline {
             steps {
                 script {
                     docker.image("${DOCKER_IMAGE_NAME}:${env.BUILD_ID}").inside {
+                        sh 'ls'
                         sh 'php artisan test'
                     }
                 }
@@ -66,6 +67,15 @@ pipeline {
                     -p ${DEPLOY_PORT}:80 \
                     ${DOCKER_IMAGE_NAME}:${env.BUILD_ID}
                     """
+                }
+            }
+        }
+
+        stage('Verify Deployment') {
+            steps {
+                script {
+                    // Example: Send an HTTP request to verify the app is running
+                    sh "curl -f http://localhost:${env.DEPLOY_PORT} || (echo 'Deployment failed!' && exit 1)"
                 }
             }
         }

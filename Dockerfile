@@ -32,7 +32,7 @@ RUN composer install
 RUN php artisan key:generate
 
 # Ensure correct permissions
-RUN chown -R www-data:www-data /var/www/html
+# RUN chown -R www-data:www-data /var/www/html
 
 # Expose ports
 EXPOSE 80
