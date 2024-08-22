@@ -45,18 +45,6 @@ pipeline {
             }
         }
 
-        stage('Install dependencies') {
-            steps {
-                script {
-                    docker.image("${DOCKER_IMAGE_NAME}:${env.BUILD_ID}").inside {
-                        sh 'composer install'
-                        sh 'cp .env.example .env'
-                        sh 'php artisan key:generate'
-                    }
-                }
-            }
-        }
-
         stage('Run Tests') {
             steps {
                 script {

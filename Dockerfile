@@ -28,6 +28,8 @@ RUN mv composer.phar /usr/local/bin/composer
 # Install Laravel dependencies
 RUN composer install
 
+COPY .env.example /var/www/html/.env
+
 RUN php artisan key:generate
 
 # Ensure correct permissions
