@@ -11,6 +11,8 @@ RUN apt-get update && apt-get install -y \
 # Install the PHP zip extension
 RUN docker-php-ext-install zip
 
+RUN mkdir -p /var/log/php-fpm
+
 # Copy your deployment configurations
 COPY deployment/nginx.conf /etc/nginx/nginx.conf
 COPY deployment/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
