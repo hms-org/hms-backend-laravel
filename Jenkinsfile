@@ -45,17 +45,6 @@ pipeline {
             }
         }
 
-        // stage('Run Tests') {
-        //     steps {
-        //         script {
-        //             docker.image("${DOCKER_IMAGE_NAME}:${env.BUILD_ID}").inside {
-        //                 sh 'ls -la'
-        //                 sh 'php artisan test'
-        //             }
-        //         }
-        //     }
-        // }
-
         stage('Deploy to Server') {
             steps {
                 script {
