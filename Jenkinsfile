@@ -72,7 +72,7 @@ pipeline {
                     ${DOCKER_IMAGE_NAME}:${env.BUILD_ID}
                     """
 
-                    sh """docker exec -it ${DOCKER_IMAGE_NAME}"""
+                    sh """docker exec -it ${DOCKER_IMAGE_NAME} bash"""
                     sh """ls"""
                     sh """pwd"""
                 }
