@@ -52,8 +52,8 @@ pipeline {
         stage('Preparation Environment') {
             steps {
                 script {
-                    sh "ls -la"
-                    sh "pwd"
+                    sh """ls -la"""
+                    sh """pwd"""
                 }
             }
         }
@@ -69,7 +69,6 @@ pipeline {
                     sh """
                     docker run -d --name ${DOCKER_IMAGE_NAME} \
                     -p ${DEPLOY_PORT}:80 \
-                    --env-file=${ENV_FILE} \
                     ${DOCKER_IMAGE_NAME}:${env.BUILD_ID}
                     """
 
