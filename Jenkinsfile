@@ -46,9 +46,7 @@ pipeline {
                 script {
                     sh """ls -la"""
                     sh """pwd"""
-                    sh """#!/bin/bash
-                    cp ${ENV_FILE} src/.env
-                    """
+                    sh "echo \"${env.ENV_HMS_DEV_LARAVEL}\" > src/.env"
                 }
             }
         }
