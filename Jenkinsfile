@@ -46,7 +46,7 @@ pipeline {
                 script {
                     sh """ls -la"""
                     sh """pwd"""
-                    sh "echo \"${ENV_FILE}\" > src/.env"
+                    sh "echo \"$ENV_HMS_PROD_LARAVEL\" > src/.env"
                 }
             }
         }
