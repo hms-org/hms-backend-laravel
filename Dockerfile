@@ -4,7 +4,10 @@ FROM php:8.2-fpm
 # Install necessary dependencies, including Nginx, Supervisor, zip extension, and unzip
 RUN apt-get update && apt-get install -y \
     libzip-dev \
-    unzip
+    unzip \
+    && docker-php-ext-install zip \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install the PHP zip extension
 RUN docker-php-ext-install zip
@@ -26,7 +29,10 @@ RUN composer install
 RUN php artisan key:generate
 
 # Ensure correct permissions
-RUN chown -R www-data:www-data /var/www/html
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html/storage /var/www/html/bootstrap/cache
 
 # Expose ports
 EXPOSE 80
+
+CMD ["php", "-S", "0.0.0.0:80", "-t", "/var/www/html/public"]
