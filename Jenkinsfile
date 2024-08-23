@@ -11,31 +11,35 @@ pipeline {
         stage('Determine Branch') {
             steps {
                 script {
-                    def branchName = sh(
-                        script: 'git rev-parse --abbrev-ref HEAD',
-                        returnStdout: true
-                    ).trim()
-                    env.BRANCH_NAME = branchName
+                    try {
+                        def branchName = sh(
+                            script: 'git rev-parse --abbrev-ref HEAD',
+                            returnStdout: true
+                        ).trim()
 
-                    if (env.BRANCH_NAME == 'dev') {
-                        env.DOCKER_IMAGE_NAME = "hms-backend-laravel-dev"
-                        env.DEPLOY_PORT = "8001"
-                        env.ENV_FILE = ".env.dev"
-                    } else if (env.BRANCH_NAME == 'uat') {
-                        env.DOCKER_IMAGE_NAME = "hms-backend-laravel-uat"
-                        env.DEPLOY_PORT = "8002"
-                        env.ENV_FILE = ".env.uat"
-                    } else if (env.BRANCH_NAME == 'prod') {
-                        env.DOCKER_IMAGE_NAME = "hms-backend-laravel-prod"
-                        env.DEPLOY_PORT = "8003"
-                        env.ENV_FILE = ".env.prod"
-                    } else {
-                        error("Unknown branch for deployment!")
+                        if (branchName == 'dev') {
+                            env.DOCKER_IMAGE_NAME = "hms-backend-laravel-dev"
+                            env.DEPLOY_PORT = "8001"
+                            env.ENV_FILE = ".env.dev"
+                        } else if (branchName == 'uat') {
+                            env.DOCKER_IMAGE_NAME = "hms-backend-laravel-uat"
+                            env.DEPLOY_PORT = "8002"
+                            env.ENV_FILE = ".env.uat"
+                        } else if (branchName == 'prod') {
+                            env.DOCKER_IMAGE_NAME = "hms-backend-laravel-prod"
+                            env.DEPLOY_PORT = "8003"
+                            env.ENV_FILE = ".env.prod"
+                        } else {
+                            error("Unknown branch for deployment!")
+                        }
+
+                        echo "Deploying branch: ${branchName}"
+                        echo "Using Docker image: ${env.DOCKER_IMAGE_NAME}"
+                        echo "Deploying on port: ${env.DEPLOY_PORT}"
+                    } catch (Exception e) {
+                        echo "Failed to determine branch: ${e.message}"
+                        error("Branch determination failed")
                     }
-
-                    echo "Deploying branch: ${env.BRANCH_NAME}"
-                    echo "Using Docker image: ${env.DOCKER_IMAGE_NAME}"
-                    echo "Deploying on port: ${env.DEPLOY_PORT}"
                 }
             }
         }
