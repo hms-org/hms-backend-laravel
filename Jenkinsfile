@@ -15,15 +15,15 @@ pipeline {
                     if (env.BRANCH_NAME == 'dev') {
                         DOCKER_IMAGE_NAME = "hms-backend-laravel-dev"
                         DEPLOY_PORT = "8001"
-                        ENV_FILE = ".env.dev"
+                        ENV_FILE = environment('ENV_HMS_DEV_LARAVEL')
                     } else if (env.BRANCH_NAME == 'uat') {
                         DOCKER_IMAGE_NAME = "hms-backend-laravel-uat"
                         DEPLOY_PORT = "8002"
-                        ENV_FILE = ".env.uat"
+                        ENV_FILE = environment('ENV_HMS_UAT_LARAVEL')
                     } else if (env.BRANCH_NAME == 'prod') {
                         DOCKER_IMAGE_NAME = "hms-backend-laravel-prod"
                         DEPLOY_PORT = "8003"
-                        ENV_FILE = ".env.prod"
+                        ENV_FILE = environment('ENV_HMS_PROD_LARAVEL')
                     } else {
                         error("Unknown branch for deployment!")
                     }
@@ -46,7 +46,7 @@ pipeline {
                 script {
                     sh """ls -la"""
                     sh """pwd"""
-                    sh "echo 'This is a new file' > src/.env"
+                    sh "echo '${ENV_FILE}' > src/.env"
                 }
             }
         }
