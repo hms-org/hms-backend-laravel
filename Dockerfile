@@ -1,14 +1,15 @@
 # Use PHP 8.3 image with FPM
-FROM php:8.2-fpm
+FROM php:8.3-fpm
 
-# Install necessary dependencies, including Nginx, Supervisor, zip extension, and unzip
+# Install necessary dependencies, including PostgreSQL extension, zip extension, and unzip
 RUN apt-get update && \
-    apt-get install -y software-properties-common libzip-dev unzip nano python3-pip && \
-    apt-get install -y python3-software-properties python3-launchpadlib && \
-    add-apt-repository ppa:ondrej/php && \
-    apt-get update && \
-    apt install php8.2 php8.2-pgsql \
-    docker-php-ext-install zip && \
+    apt-get install -y \
+    libpq-dev \
+    libzip-dev \
+    unzip \
+    nano \
+    python3-pip && \
+    docker-php-ext-install pgsql pdo_pgsql zip && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
