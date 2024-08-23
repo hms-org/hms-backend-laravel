@@ -2,17 +2,18 @@
 FROM php:8.3-fpm
 
 # Install necessary dependencies, including Nginx, Supervisor, zip extension, and unzip
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && \
+    apt-get install -y \
+    software-properties-common \
     libzip-dev \
     unzip \
-    && apt-get install -y software-properties-common \
-    && add-apt-repository ppa:ondrej/php \
-    && apt-get update \
-    && apt-get install -y php8.3-pgsql \
-    && apt-get install nano \
-    && docker-php-ext-install zip \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    nano && \
+    add-apt-repository ppa:ondrej/php && \
+    apt-get update && \
+    apt-get install -y php8.3-pgsql && \
+    docker-php-ext-install zip && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 # Install the PHP zip extension
 RUN docker-php-ext-install zip
