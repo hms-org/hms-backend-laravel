@@ -48,7 +48,7 @@ pipeline {
                     sh """pwd"""
                     withCredentials([
                         file(credentialsId: ENV_FILE,
-                        variable: 'environment-dev')
+                        variable: 'ENV_FILE_PATH')
                     ]) {
                         sh 'ls -la $(dirname $ENV_FILE_PATH)'
                     }
