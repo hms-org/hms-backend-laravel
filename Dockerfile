@@ -1,37 +1,33 @@
-FROM php:8.3-fpm
+# Use PHP 8.2 image with FPM
+FROM php:8.2-fpm
 
-# Arguments defined in docker-compose.yml
-ARG user
-ARG uid
-
-# Install system dependencies
+# Install necessary dependencies, including Nginx, Supervisor, zip extension, and unzip
 RUN apt-get update && apt-get install -y \
-    git \
-    curl \
-    libpng-dev \
-    libonig-dev \
-    libxml2-dev \
-    zip \
+    libzip-dev \
     unzip
 
-# Clear cache
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+# Install the PHP zip extension
+RUN docker-php-ext-install zip
 
-# Install PHP extensions
-RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
-
-# Get latest Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
-# Create system user to run Composer and Artisan Commands
-ARG uid=1000
-ARG user=myuser
-RUN useradd -u ${uid} -d /home/${user} -G www-data,root ${user}
-
-RUN mkdir -p /home/$user/.composer && \
-    chown -R $user:$user /home/$user
+# Copy your web files
+COPY src /var/www/html
 
 # Set working directory
-WORKDIR /var/www
+WORKDIR /var/www/html
 
-USER $user
+# Install Composer
+RUN curl -sS https://getcomposer.org/installer | php
+RUN mv composer.phar /usr/local/bin/composer
+
+# Install Laravel dependencies
+RUN composer install
+
+COPY .env.example /var/www/html/.env
+
+RUN php artisan key:generate
+
+# Ensure correct permissions
+RUN chown -R www-data:www-data /var/www/html
+
+# Expose ports
+EXPOSE 80

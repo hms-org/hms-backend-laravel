@@ -52,10 +52,11 @@ pipeline {
                     sh "docker stop ${DOCKER_IMAGE_NAME} || true"
                     sh "docker rm ${DOCKER_IMAGE_NAME} || true"
 
-                    sh '''
-                    docker-compose -f docker-compose.prod.yml down
-                    docker-compose -f docker-compose.prod.yml up -d
-                    '''
+                    sh """
+                    docker run -d --name ${DOCKER_IMAGE_NAME} \
+                    -p ${DEPLOY_PORT}:80 \
+                    ${DOCKER_IMAGE_NAME}:${env.BUILD_ID}
+                    """
                 }
             }
         }
