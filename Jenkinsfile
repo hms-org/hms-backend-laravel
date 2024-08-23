@@ -50,7 +50,7 @@ pipeline {
                         string(credentialsId: ENV_FILE,
                         variable: 'ENV_FILE_PATH')
                     ]) {
-                        sh 'echo $ENV_FILE_PATH'
+                        sh 'echo $ENV_FILE_PATH > src/.env'
                     }
                 }
             }
