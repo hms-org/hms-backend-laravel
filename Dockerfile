@@ -24,8 +24,8 @@ RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Create system user to run Composer and Artisan Commands
-ARG uid
-ARG user
+ARG uid=1000
+ARG user=myuser
 RUN useradd -u ${uid} -d /home/${user} -G www-data,root ${user}
 
 RUN mkdir -p /home/$user/.composer && \
