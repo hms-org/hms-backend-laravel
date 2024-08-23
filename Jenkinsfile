@@ -47,10 +47,10 @@ pipeline {
                     sh """ls -la"""
                     sh """pwd"""
                     withCredentials([
-                        file(credentialsId: ENV_FILE,
+                        string(credentialsId: ENV_FILE,
                         variable: 'ENV_FILE_PATH')
                     ]) {
-                        sh 'ls -la $(dirname $ENV_FILE_PATH)'
+                        sh 'echo $ENV_FILE_PATH'
                     }
                 }
             }
