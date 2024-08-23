@@ -26,7 +26,7 @@ RUN mv composer.phar /usr/local/bin/composer
 # Install Laravel dependencies
 # RUN composer install
 
-RUN php artisan key:generate
+# RUN php artisan key:generate
 
 # Ensure correct permissions
 # RUN chown -R www-data:www-data /var/www/html \
