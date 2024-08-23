@@ -46,8 +46,8 @@ pipeline {
                 script {
                     sh """ls -la"""
                     sh """pwd"""
+                    sh "echo ${$ENV_FILE} > src/.env"
                 }
-                sh('cp ${$ENV_FILE} src/.env')
             }
         }
 
