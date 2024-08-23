@@ -50,7 +50,7 @@ pipeline {
                         file(credentialsId: ENV_FILE,
                         variable: 'DB_HOST')
                     ]) {
-                        sh 'cat $ENV_FILE_PATH'
+                        sh 'cat $DB_HOST'
                     }
                 }
             }
