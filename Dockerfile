@@ -3,11 +3,8 @@ FROM php:8.3-fpm
 
 # Install necessary dependencies, including Nginx, Supervisor, zip extension, and unzip
 RUN apt-get update && \
-    apt-get install -y \
-    software-properties-common \
-    libzip-dev \
-    unzip \
-    nano && \
+    apt-get install -y software-properties-common libzip-dev unzip nano python3-pip && \
+    apt-get install -y python3-software-properties python3-launchpadlib && \
     add-apt-repository ppa:ondrej/php && \
     apt-get update && \
     apt-get install -y php8.3-pgsql && \
