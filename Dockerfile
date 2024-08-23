@@ -24,13 +24,13 @@ RUN curl -sS https://getcomposer.org/installer | php
 RUN mv composer.phar /usr/local/bin/composer
 
 # Install Laravel dependencies
-# RUN composer install
+RUN composer install
 
-# RUN php artisan key:generate
+RUN php artisan key:generate
 
 # Ensure correct permissions
-# RUN chown -R www-data:www-data /var/www/html \
-#     && chmod -R 755 /var/www/html/storage /var/www/html/bootstrap/cache
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html/storage /var/www/html/bootstrap/cache
 
 # Expose ports
 EXPOSE 80
