@@ -56,6 +56,16 @@ pipeline {
             }
         }
 
+        stage('Remove Previous Docker') {
+            steps {
+                script {
+                    sh "docker stop ${DOCKER_IMAGE_NAME} || true"
+                    sh "docker rm ${DOCKER_IMAGE_NAME} || true"
+                    sh "docker rmi ${DOCKER_IMAGE_NAME} || true"
+                }
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
                 script {
@@ -67,10 +77,6 @@ pipeline {
         stage('Deploy to Server') {
             steps {
                 script {
-                    sh "docker stop ${DOCKER_IMAGE_NAME} || true"
-                    sh "docker rm ${DOCKER_IMAGE_NAME} || true"
-                    sh "docker rmi ${DOCKER_IMAGE_NAME} || true"
-
                     // Pass environment file to Docker
                     sh """
                     docker run -d --name ${DOCKER_IMAGE_NAME} \
