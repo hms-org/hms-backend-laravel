@@ -75,6 +75,7 @@ pipeline {
                     sh """docker exec -i ${DOCKER_IMAGE_NAME} bash"""
                     sh """ls"""
                     sh """pwd"""
+                    sh """cd src \ touch test.php"""
                 }
             }
         }
