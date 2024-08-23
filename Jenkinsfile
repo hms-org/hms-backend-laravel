@@ -11,7 +11,7 @@ pipeline {
         stage('Prepare') {
             steps {
                 script {
-                    env.BRANCH_NAME == 'dev'
+                    env.BRANCH_NAME = 'dev'
                     if (env.BRANCH_NAME == 'dev') {
                         DOCKER_IMAGE_NAME = "hms-backend-laravel-dev"
                         DEPLOY_PORT = "8001"
