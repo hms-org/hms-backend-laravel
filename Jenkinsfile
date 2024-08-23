@@ -46,11 +46,11 @@ pipeline {
                 script {
                     sh """ls -la"""
                     sh """pwd"""
-                     withCredentials([
+                    withCredentials([
                         file(credentialsId: ENV_FILE,
-                        variable: 'DB_HOST')
+                        variable: 'CONFIG_FILE')
                     ]) {
-                        sh 'cat $DB_HOST'
+                        sh 'cat $CONFIG_FILE'
                     }
                 }
             }
