@@ -3,15 +3,16 @@ FROM php:8.3-fpm
 
 # Install necessary dependencies, including Nginx, Supervisor, zip extension, and unzip
 RUN apt-get update && \
-    apt-get install -y software-properties-common && \
-    add-apt-repository ppa:ondrej/php -y && \
+    apt-get install -y software-properties-common libzip-dev unzip nano python3-pip && \
+    apt-get install -y python3-software-properties python3-launchpadlib && \
+    add-apt-repository ppa:ondrej/php && \
     apt-get update && \
-    apt-get install -y php8.3 php8.3-cli php8.3-fpm php8.3-zip php8.3-xml php8.3-mbstring php8.3-curl php8.3-intl php8.3-pdo php8.3-xmlrpc php8.3-soap php8.3-gd php8.3-mysql && \
-    apt-get install -y libpq-dev && \
+    docker-php-ext-install zip && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-RUN docker-php-ext-install pdo pdo_pgsql pgsql
+# Install the PHP zip extension
+RUN docker-php-ext-install zip
 
 # Copy your web files
 COPY src /var/www/html
