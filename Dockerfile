@@ -14,7 +14,7 @@ RUN docker-php-ext-install zip
 
 # Copy your web files
 COPY src /var/www/html
-COPY src/.env.example /var/www/html/.env
+# COPY src/.env.example /var/www/html/.env
 
 # Set working directory
 WORKDIR /var/www/html

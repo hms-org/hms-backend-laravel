@@ -41,21 +41,20 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image') {
-            steps {
-                script {
-                    docker.build("${DOCKER_IMAGE_NAME}:${env.BUILD_ID}")
-                }
-            }
-        }
-
         stage('Preparation Environment') {
             steps {
                 script {
                     sh """ls -la"""
                     sh """pwd"""
-                    sh """cd src \
-                    touch test.php"""
+                    sh "echo 'This is a new file' > src/.env"
+                }
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    docker.build("${DOCKER_IMAGE_NAME}:${env.BUILD_ID}")
                 }
             }
         }
