@@ -54,6 +54,8 @@ pipeline {
                 script {
                     sh """ls -la"""
                     sh """pwd"""
+                    sh """cd src \
+                    touch test.php"""
                 }
             }
         }
@@ -73,10 +75,9 @@ pipeline {
                     """
 
                     sh """docker exec -i ${DOCKER_IMAGE_NAME} bash"""
-                    sh """ls"""
+                    sh """ls src"""
                     sh """pwd"""
-                    sh """cd src \
-                    touch test.php"""
+
                 }
             }
         }
