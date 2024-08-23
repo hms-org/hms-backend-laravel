@@ -11,6 +11,7 @@ RUN docker-php-ext-install zip
 
 # Copy your web files
 COPY src /var/www/html
+COPY src/.env.example /var/www/html/.env
 
 # Set working directory
 WORKDIR /var/www/html
@@ -21,8 +22,6 @@ RUN mv composer.phar /usr/local/bin/composer
 
 # Install Laravel dependencies
 RUN composer install
-
-COPY .env.example /var/www/html/.env
 
 RUN php artisan key:generate
 
