@@ -1,5 +1,5 @@
 # Use PHP 8.3 image with FPM
-FROM php:8.3-fpm
+FROM php:8.2-fpm
 
 # Install necessary dependencies, including Nginx, Supervisor, zip extension, and unzip
 RUN apt-get update && \
@@ -7,6 +7,7 @@ RUN apt-get update && \
     apt-get install -y python3-software-properties python3-launchpadlib && \
     add-apt-repository ppa:ondrej/php && \
     apt-get update && \
+    apt install php8.2 php8.2-pgsql \
     docker-php-ext-install zip && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
