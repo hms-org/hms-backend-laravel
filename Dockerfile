@@ -1,35 +1,42 @@
-FROM php:8.2-apache
+# Use PHP 8.3 image with FPM
+FROM php:8.3-fpm
 
-RUN apt-get update && apt-get install -y \
-    git \
-    unzip \
+# Install necessary dependencies, including PostgreSQL extension, zip extension, and unzip
+RUN apt-get update && \
+    apt-get install -y \
+    libpq-dev \
     libzip-dev \
-    libxml2-dev \
-    && docker-php-ext-install zip pdo_mysql dom xml
+    unzip \
+    nano \
+    python3-pip && \
+    docker-php-ext-install pgsql pdo_pgsql zip && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
-# Install Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+# Install the PHP zip extension
+RUN docker-php-ext-install zip
 
-# Set work directory
+# Copy your web files
+COPY src /var/www/html
+# COPY src/.env.example /var/www/html/.env
+
+# Set working directory
 WORKDIR /var/www/html
 
-# Copy project files ke dalam container
-COPY . .
+# Install Composer
+RUN curl -sS https://getcomposer.org/installer | php
+RUN mv composer.phar /usr/local/bin/composer
 
-# Install PHP dependencies
-RUN composer install --no-dev --optimize-autoloader
+# Install Laravel dependencies
+RUN composer install
 
-# Copy file konfigurasi Apache
-COPY .docker/vhost.conf /etc/apache2/sites-available/000-default.conf
+RUN php artisan key:generate
 
-# Enable Apache Rewrite Module
-RUN a2enmod rewrite
+# Ensure correct permissions
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Expose port 80
+# Expose ports
 EXPOSE 80
 
-# Set permissions
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
-
-# Run Apache
-CMD ["apache2-foreground"]
+CMD ["php", "-S", "0.0.0.0:80", "-t", "/var/www/html/public"]

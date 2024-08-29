@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  app:
+    image: hms-backend-laravel-dev
+    ports:
+      - "9000:9000"
+    volumes:
+      - .:/var/www/html
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
