@@ -11,7 +11,6 @@ pipeline {
         stage('Prepare') {
             steps {
                 script {
-                    env.BRANCH_NAME = 'dev'
                     if (env.BRANCH_NAME == 'dev') {
                         DOCKER_IMAGE_NAME = "hms-backend-laravel-dev"
                         DEPLOY_PORT = "8001"
@@ -77,7 +76,6 @@ pipeline {
         stage('Deploy to Server') {
             steps {
                 script {
-                    // Pass environment file to Docker
                     sh """
                     docker run -d --name ${DOCKER_IMAGE_NAME} \
                     -p ${DEPLOY_PORT}:80 \
