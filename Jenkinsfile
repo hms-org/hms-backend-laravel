@@ -58,7 +58,8 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    docker.build("${DOCKER_IMAGE_NAME}:${env.BUILD_ID}")
+                    sh """echo 'Build Now... '"""
+                    docker.build("${DOCKER_IMAGE_NAME}:${env.BUILD_NUMBER}", "--no-cache .")
                 }
             }
         }

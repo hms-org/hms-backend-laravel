@@ -33,8 +33,8 @@ RUN composer install
 RUN php artisan key:generate
 
 # Ensure correct permissions
-RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 /var/www/html/storage /var/www/html/bootstrap/cache
+#RUN chown -R www-data:www-data /var/www/html \
+    #&& chmod -R 755 /var/www/html/storage /var/www/html/bootstrap/cache
 
 # Expose ports
 EXPOSE 80
