@@ -55,20 +55,22 @@ pipeline {
             }
         }
 
-        stage('Remove Previous Docker') {
-            steps {
-                script {
-                    sh "docker stop ${DOCKER_IMAGE_NAME} || true"
-                    sh "docker rm ${DOCKER_IMAGE_NAME} || true"
-                    sh "docker rmi ${DOCKER_IMAGE_NAME} || true"
-                }
-            }
-        }
-
         stage('Build Docker Image') {
             steps {
                 script {
                     docker.build("${DOCKER_IMAGE_NAME}:${env.BUILD_ID}")
+                }
+            }
+        }
+
+        stage('Stop and Remove Previous Docker Container') {
+            steps {
+                script {
+                    sh "docker stop ${DOCKER_IMAGE_NAME} || true"
+                    sh "docker rm ${DOCKER_IMAGE_NAME} || true"
+                    sh """#!/bin/bash
+                        docker images --filter=reference='${DOCKER_IMAGE_NAME}' --format '{{.ID}} {{.Repository}}:{{.Tag}}' | grep -v '${DOCKER_IMAGE_NAME}:${env.BUILD_ID}' | awk '{print \$1}' | xargs -r docker rmi || true
+                    """
                 }
             }
         }
