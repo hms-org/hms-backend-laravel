@@ -59,7 +59,7 @@ pipeline {
             steps {
                 script {
                     sh """echo 'Build Now... '"""
-                    docker.build("${DOCKER_IMAGE_NAME}:${env.BUILD_NUMBER}", "--no-cache")
+                    docker.build("${DOCKER_IMAGE_NAME}:${env.BUILD_NUMBER}", "--no-cache .")
                 }
             }
         }
